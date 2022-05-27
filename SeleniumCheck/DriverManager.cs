@@ -1,7 +1,6 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System.Collections.ObjectModel;
-using WebDriverManager;
 using WebDriverManager.DriverConfigs.Impl;
 using SeleniumExtras.WaitHelpers;
 using OpenQA.Selenium.Support.UI;
@@ -17,8 +16,12 @@ namespace SeleniumCheck
         {
             ChromeOptions options = new ChromeOptions();
             if (Headless) options.AddArgument("headless");
-            string _ = new WebDriverManager.DriverManager().SetUpDriver(new ChromeConfig());
-            driver = new ChromeDriver(options);
+            options.AddArgument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit (KHTML, like Gecko) Chrome Safarit");
+            options.Proxy = null;
+            var _ = new WebDriverManager.DriverManager().SetUpDriver(new ChromeConfig());
+            var chromeDriverService = ChromeDriverService.CreateDefaultService();
+            chromeDriverService.HideCommandPromptWindow = true;
+            driver = new ChromeDriver(chromeDriverService, options);
         }
 
         public void LoginAndCheck(string username, string password)
@@ -103,7 +106,6 @@ namespace SeleniumCheck
         public void Dispose()
         {
             driver.Dispose();
-            Environment.Exit(0);
         }
 
         private void UntilExists(By locator)

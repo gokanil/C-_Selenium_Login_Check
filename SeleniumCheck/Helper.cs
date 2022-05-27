@@ -108,14 +108,16 @@ namespace SeleniumCheck
             File.Delete(Path.Combine(path, filename));
         }
 
-        public static void CheckArgsAndExit(int count, params string[] args)
+        public static string[] GetUserContent(params string[] args)
         {
-            if (args.Length == 0 || args.Any(x => string.IsNullOrEmpty(x)))
+            string[] userContent = args.Where(x => !x.Contains('/')).ToArray();
+            if (userContent is null || userContent.Length < 2)
             {
                 Console.WriteLine("args not valid!");
                 Console.ReadKey();
                 Environment.Exit(0);
             }
+            return userContent;
         }
         #endregion
     }
